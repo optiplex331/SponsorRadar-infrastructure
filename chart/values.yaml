@@ -10,7 +10,7 @@ hostname: sponsorradar.halligalli.games
 
 tunnel:
   # Filled after `cloudflared tunnel create sponsor-radar` (the tunnel UUID).
-  id: ""
+  id: de9806b4-7891-4ecc-8047-2de4893e7a7d
 
 web:
   resources:
