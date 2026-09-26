@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared
+  labels:
+    {{- include "sr.labels" "cloudflared" | nindent 4 }}
+data:
+  config.yaml: |
+    tunnel: {{ required "tunnel.id is required (cloudflared tunnel create sponsor-radar)" .Values.tunnel.id }}
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    metrics: 0.0.0.0:2000
+    no-autoupdate: true
+    ingress:
+      - hostname: {{ required "hostname is required" .Values.hostname }}
+        service: http://web:80
+      - service: http_status:404

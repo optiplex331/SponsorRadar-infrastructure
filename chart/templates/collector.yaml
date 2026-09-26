@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: collector
+  labels:
+    {{- include "sr.labels" "collector" | nindent 4 }}
+spec:
+  schedule: {{ .Values.collector.schedule | quote }}
+  timeZone: {{ .Values.collector.timeZone }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "sr.labels" "collector" | nindent 8 }}
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: {{ .Values.collector.activeDeadlineSeconds }}
+      template:
+        metadata:
+          labels:
+            {{- include "sr.labels" "collector" | nindent 12 }}
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            {{- include "sr.appPodSecurity" . | nindent 12 }}
+          containers:
+            - name: collector
+              image: {{ include "sr.image" . }}
+              args: ["sponsor-radar", "run"]
+              env:
+                {{- include "sr.dbEnv" . | nindent 16 }}
+              resources:
+                {{- toYaml .Values.collector.resources | nindent 16 }}
+              securityContext:
+                {{- include "sr.containerSecurity" . | nindent 16 }}
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: tmp
+              emptyDir: {}

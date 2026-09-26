@@ -1,0 +1,5 @@
+apiVersion: v2
+name: sponsor-radar
+description: NL Sponsor Radar on the shared K3s host (web, collector, postgres, cloudflared).
+type: application
+version: 0.1.0

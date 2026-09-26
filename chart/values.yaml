@@ -1,0 +1,54 @@
+# Product image, referenced only by digest.
+image:
+  repository: ghcr.io/optiplex331/sponsor-radar
+  # Filled after the first product CI build on main. Release = bump this line.
+  # docker buildx imagetools inspect ghcr.io/optiplex331/sponsor-radar:main --format '{{ .Manifest.Digest }}'
+  digest: sha256:73b13fcb7644892033153331c81dd6d70d0afebdb3c63a8ceaf7431d42cdc3f7
+
+# Public hostname served through the sponsor-radar Cloudflare Tunnel.
+hostname: sponsorradar.halligalli.games
+
+tunnel:
+  # Filled after `cloudflared tunnel create sponsor-radar` (the tunnel UUID).
+  id: ""
+
+web:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+collector:
+  schedule: "0 5 * * *"
+  timeZone: Etc/UTC
+  activeDeadlineSeconds: 3600
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+postgres:
+  # postgres:18-alpine, multi-arch index digest.
+  image: docker.io/library/postgres:18-alpine@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873
+  storageClassName: local-path
+  storage: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+cloudflared:
+  # cloudflare/cloudflared:2026.9.3, multi-arch index digest.
+  image: docker.io/cloudflare/cloudflared:2026.9.3@sha256:072c067d25ccbe61d46e18f0d0723255f2bb5304f7317caa95b27031520ff92c
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      memory: 128Mi

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sponsor-radar
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: sponsor-radar
+spec:
+  project: sponsor-radar
+  source:
+    repoURL: https://github.com/optiplex331/SponsorRadar-infrastructure.git
+    targetRevision: main
+    path: chart
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sponsor-radar
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

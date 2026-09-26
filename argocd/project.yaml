@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: sponsor-radar
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: sponsor-radar
+spec:
+  description: NL Sponsor Radar on the shared K3s host. Namespace sponsor-radar only.
+  sourceRepos:
+    - https://github.com/optiplex331/SponsorRadar-infrastructure.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: sponsor-radar
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: Service
+    - group: apps
+      kind: Deployment
+    - group: apps
+      kind: StatefulSet
+    - group: batch
+      kind: CronJob
+    - group: networking.k8s.io
+      kind: NetworkPolicy
